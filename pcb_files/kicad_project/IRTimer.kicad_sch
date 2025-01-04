@@ -228,8 +228,8 @@
 			)
 			(symbol "Battery_0_1"
 				(rectangle
-					(start -2.032 -1.397)
-					(end 2.032 -1.651)
+					(start -2.286 -1.27)
+					(end 2.286 -1.524)
 					(stroke
 						(width 0)
 						(type default)
@@ -239,8 +239,8 @@
 					)
 				)
 				(rectangle
-					(start -2.032 1.778)
-					(end 2.032 1.524)
+					(start -2.286 1.778)
+					(end 2.286 1.524)
 					(stroke
 						(width 0)
 						(type default)
@@ -250,8 +250,8 @@
 					)
 				)
 				(rectangle
-					(start -1.3208 -1.9812)
-					(end 1.27 -2.4892)
+					(start -1.524 -2.032)
+					(end 1.524 -2.54)
 					(stroke
 						(width 0)
 						(type default)
@@ -261,26 +261,14 @@
 					)
 				)
 				(rectangle
-					(start -1.3208 1.1938)
-					(end 1.27 0.6858)
+					(start -1.524 1.016)
+					(end 1.524 0.508)
 					(stroke
 						(width 0)
 						(type default)
 					)
 					(fill
 						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 -1.524) (xy 0 -1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
 					)
 				)
 				(polyline
@@ -321,18 +309,6 @@
 				)
 				(polyline
 					(pts
-						(xy 0 0.508) (xy 0 0.762)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
 						(xy 0 1.778) (xy 0 2.54)
 					)
 					(stroke
@@ -345,7 +321,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0.254 2.667) (xy 1.27 2.667)
+						(xy 0.762 3.048) (xy 1.778 3.048)
 					)
 					(stroke
 						(width 0.254)
@@ -357,7 +333,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0.762 3.175) (xy 0.762 2.159)
+						(xy 1.27 3.556) (xy 1.27 2.54)
 					)
 					(stroke
 						(width 0.254)
@@ -1092,7 +1068,7 @@
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "SW"
-				(at 0 4.318 0)
+				(at 0 5.08 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1177,9 +1153,20 @@
 				)
 			)
 			(symbol "SW_DPDT_x2_0_1"
+				(rectangle
+					(start -3.175 3.81)
+					(end 3.175 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
 				(polyline
 					(pts
-						(xy -1.524 0.254) (xy 1.651 2.286)
+						(xy -1.524 0.254) (xy 1.5748 2.286)
 					)
 					(stroke
 						(width 0)
@@ -3172,6 +3159,16 @@
 	)
 	(wire
 		(pts
+			(xy 114.3 154.94) (xy 104.14 154.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "04ab9f79-4567-4da1-8ab5-59342f0b9a7a")
+	)
+	(wire
+		(pts
 			(xy 260.35 80.01) (xy 260.35 86.36)
 		)
 		(stroke
@@ -3732,16 +3729,6 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 154.94) (xy 104.14 154.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a969bb8f-52dd-4ccf-ae9a-537fd2aa991a")
-	)
-	(wire
-		(pts
 			(xy 116.84 45.72) (xy 128.27 45.72)
 		)
 		(stroke
@@ -4262,7 +4249,18 @@
 		)
 		(uuid "350d0245-8ef6-4fff-b272-bd415609582b")
 	)
-	(label "TFT_SCLK"
+	(label "TFT_SCL"
+		(at 114.3 154.94 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "3c551e48-7bca-42bd-b373-467047483d7d")
+	)
+	(label "TFT_SCL"
 		(at 116.84 50.8 0)
 		(fields_autoplaced yes)
 		(effects
@@ -4272,6 +4270,17 @@
 			(justify left bottom)
 		)
 		(uuid "414d1a99-dd27-41cb-ae06-0ef63f76df20")
+	)
+	(label "TFT_SDA"
+		(at 114.3 157.48 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "426dbaf2-5ca5-42c2-b330-c226c83cbee7")
 	)
 	(label "BATT"
 		(at 179.07 142.24 0)
@@ -4294,17 +4303,6 @@
 			(justify left bottom)
 		)
 		(uuid "626542bd-eaa4-4686-ba74-4980b75e666c")
-	)
-	(label "TFT_SCLK"
-		(at 114.3 157.48 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "708dcb1f-57be-4eac-82e4-58d8a29feca7")
 	)
 	(label "BATT"
 		(at 250.19 82.55 180)
@@ -4371,17 +4369,6 @@
 			(justify right bottom)
 		)
 		(uuid "ab1b48af-22f8-4a63-8b0f-d0ccf5eb2646")
-	)
-	(label "TFT_SCLK"
-		(at 114.3 154.94 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ac449411-a8c4-4f86-b126-10ea15fff336")
 	)
 	(label "TFT_RES"
 		(at 166.37 48.26 180)
@@ -4504,7 +4491,7 @@
 		)
 		(uuid "f41ea762-702e-4bcb-b9f4-4ce4628e0f26")
 	)
-	(label "TFT_MOSI"
+	(label "TFT_SDA"
 		(at 116.84 48.26 0)
 		(fields_autoplaced yes)
 		(effects
@@ -4811,7 +4798,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Multiple-cell battery"
 			(at 185.42 147.32 0)
 			(effects
 				(font
@@ -5647,7 +5634,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Switch, dual pole double throw, separate symbols"
 			(at 184.15 116.84 0)
 			(effects
 				(font
