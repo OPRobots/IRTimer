@@ -11,5 +11,6 @@
 
 void screen_setup();
 void screen_show_server_info(String ip, String mac, String channel, String status);
+void screen_update_timmings();
 
 #endif
