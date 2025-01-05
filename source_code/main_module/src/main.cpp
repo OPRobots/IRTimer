@@ -6,7 +6,6 @@
 
 void setup() {
   config_setup();
-  screen_update_timmings();
 }
 
 void loop() {

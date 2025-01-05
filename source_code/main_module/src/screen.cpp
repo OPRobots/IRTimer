@@ -58,40 +58,16 @@ void screen_show_server_info(String ip, String mac, String channel, String statu
   tft.println(channel);
   tft.print("Status: ");
   tft.println(status);
+  delay(2000);
+  tft.fillScreen(ST77XX_BLACK);
+  screen_show_button_labels();
 }
 
-void screen_update_timmings() {
-  delay(3000);
-  tft.setRotation(3);
-  tft.fillScreen(ST77XX_BLACK);
-  tft.setCursor(25, 0);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(3);
-  tft.println("00:00.000");
-  tft.setTextSize(1);
-  tft.println("");
-  tft.setTextSize(2);
-  tft.println("L1 BEST 00:00.000");
-  tft.setTextSize(1);
-  tft.println("");
-  tft.setTextSize(2);
-  tft.println("L1 -3.6 00:00.000");
-  tft.println("L2 +0.8 00:00.000");
-  tft.println("L3 +0.0 00:00.000");
-  tft.println("L4 +0.0 00:00.000");
-  tft.println("L5 +0.0 00:00.000");
-
-  /* tft.setRotation(4);
-  tft.setCursor(0, 0);
-
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(2);
-  tft.print("MODE");
-  tft.print("   ");
-  tft.println("STOP"); */
+void screen_show_button_labels() {
   int x = 228;
   int y = 2;
   tft.setCursor(x, y);
+  tft.fillRect(x - 6, 0, 30, 140, ST77XX_BLACK);
   tft.println("M");
   tft.setCursor(x, tft.getCursorY());
   tft.println("O");
@@ -102,7 +78,6 @@ void screen_update_timmings() {
   tft.setCursor(x, tft.getCursorY());
 
   tft.drawRoundRect(222, 0, 238, tft.getCursorY() - y + 4, 8, ST77XX_BLUE);
-  // tft.fillRoundRect(222, 0, 238, tft.getCursorY()-y+4, 8, ST77XX_BLUE);
 
   y = tft.getCursorY() + 5;
   tft.setCursor(x, y);
@@ -116,7 +91,120 @@ void screen_update_timmings() {
   tft.setCursor(x, tft.getCursorY());
 
   tft.drawRoundRect(222, y - 2, 238, tft.getCursorY() - y + 2, 8, ST77XX_BLUE);
+}
 
-  delay(3000);
-  tft.drawRGBBitmap(0, 0, IRTimer_splash, tft.width(), tft.height());
+static long last_lap_updated_ms = 0;
+long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, long best_lap_ms, long last_lap_ms, long *last_laps, long *last_laps_delta, int *last_laps_number, bool update_best_lap) {
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(3);
+  int x1 = 30;
+  int char_width = 18;
+  int char_height = 30;
+  int char_count = 9;
+  String lastTime = formatTimeMs(last_time_ms);
+  String time = formatTimeMs(time_ms);
+  if (time != lastTime || last_time_ms == 0 || time_ms == 0) {
+    int first_char = 0;
+    int char_count = 0;
+    for (int i = 0; i < 10; i++) {
+      if (time[i] != lastTime[i] && last_time_ms != 0) {
+        if (first_char == 0) {
+          first_char = i;
+        }
+        char_count++;
+      }
+    }
+    tft.fillRect(x1 + (first_char * char_width), 0, char_width * char_count, char_height, ST77XX_BLACK);
+    tft.setCursor(x1 + (first_char * char_width), 0);
+    tft.println(time.substring(first_char));
+  }
+
+  if (last_lap_updated_ms != last_lap_ms) {
+    last_lap_updated_ms = last_lap_ms;
+    tft.setCursor(0, 30);
+    tft.setTextSize(2);
+    if (update_best_lap) {
+      tft.fillRect(0, 30, 220, 20, ST77XX_BLACK);
+      if (best_lap_ms != 0) {
+        tft.setTextColor(ST77XX_WHITE);
+        tft.printf("L%-2d ", lap_number);
+        tft.setTextColor(ST77XX_MAGENTA);
+        tft.setCursor(tft.getCursorX() + 2, 30);
+        tft.printf("%s", "BEST");
+        tft.setTextColor(ST77XX_WHITE);
+        tft.setCursor(tft.getCursorX() + 10, tft.getCursorY());
+        tft.println(formatTimeMs(best_lap_ms));
+      }
+    }
+
+    for (int i = 0; i < 5; i++) {
+      tft.fillRect(0, 53 + (i * 17), 220, 30, ST77XX_BLACK);
+      tft.setCursor(0, 53 + (i * 17));
+      if (last_laps[i] == 0) {
+        continue;
+      }
+      tft.setTextColor(ST77XX_WHITE);
+      tft.printf("L%-2d", last_laps_number[i]);
+      if (last_laps_delta[i] <= 0) {
+        tft.setTextColor(ST77XX_GREEN);
+      } else {
+        tft.setTextColor(ST77XX_ORANGE);
+      }
+      tft.setCursor(tft.getCursorX() + 6, tft.getCursorY());
+      tft.printf("%s", formatDeltaMs(last_laps_delta[i]));
+      tft.setTextColor(ST77XX_WHITE);
+      tft.setCursor(tft.getCursorX() + 6, tft.getCursorY());
+      tft.println(formatTimeMs(last_laps[i]));
+    }
+  }
+  return time_ms;
+  // tft.print("L1 ");
+  // tft.setTextColor(ST77XX_MAGENTA);
+  // tft.print("BEST");
+  // tft.setTextColor(ST77XX_WHITE);
+  // tft.println(" 00:00.000");
+  // tft.setTextSize(1);
+  // tft.println("");
+  // tft.setTextSize(2);
+  // tft.print("L1 ");
+  // tft.setTextColor(ST77XX_GREEN);
+  // tft.print("-3.6");
+  // tft.setTextColor(ST77XX_WHITE);
+  // tft.println(" 00:00.000");
+  // tft.print("L2 ");
+  // tft.setTextColor(ST77XX_ORANGE);
+  // tft.print("+0.8");
+  // tft.setTextColor(ST77XX_WHITE);
+  // tft.println(" 00:00.000");
+  // tft.println("L3 +0.0 00:00.000");
+  // tft.println("L4 +0.0 00:00.000");
+  // tft.println("L5 +0.0 00:00.000");
+
+  // tft.setTextColor(ST77XX_WHITE);
+  // tft.setTextSize(3);
+  // int x1 = 25;
+  // int char_width = 18;
+  // int char_height = 30;
+  // int char_count = 9;
+  // String lastTime = "00:00:000";
+  // while (true) {
+  //   String time = formatTimeMs(millis());
+  //   if (time != lastTime) {
+  //     int first_char = 0;
+  //     int char_count = 0;
+  //     for (int i = 0; i < 10; i++) {
+  //       if (time[i] != lastTime[i]) {
+  //         if (first_char == 0) {
+  //           first_char = i;
+  //         }
+  //         char_count++;
+  //       }
+  //     }
+  //     tft.fillRect(x1 + (first_char * char_width), 0, char_width * char_count, char_height, ST77XX_BLACK);
+  //     tft.setCursor(x1 + (first_char * char_width), 0);
+  //     tft.println(time.substring(first_char));
+  //   }
+  //   lastTime = time;
+  //   delay(50);
+  // }
 }

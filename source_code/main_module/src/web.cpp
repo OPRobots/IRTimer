@@ -279,6 +279,7 @@ void data_receive(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
   memcpy(&data, incomingData, len);
   Serial.println(data);
   web_lap();
+  stopwatch_lap();
 }
 
 void web_setup() {
@@ -289,7 +290,7 @@ void web_setup() {
     return;
   }
 
-  screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
+    screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
 
   esp_now_register_recv_cb(data_receive);
 
