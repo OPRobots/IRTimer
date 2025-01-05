@@ -1,6 +1,7 @@
 #include "screen.h"
 
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
+static long last_lap_updated_ms = 0;
 
 static void screen_fast_draw_bitmap(const uint16_t *bitmap) {
   int total = tft.width() * tft.height();
@@ -93,7 +94,6 @@ void screen_show_button_labels() {
   tft.drawRoundRect(222, y - 2, 238, tft.getCursorY() - y + 2, 8, ST77XX_BLUE);
 }
 
-static long last_lap_updated_ms = 0;
 long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, long best_lap_ms, long last_lap_ms, long *last_laps, long *last_laps_delta, int *last_laps_number, bool update_best_lap) {
   tft.setTextColor(ST77XX_WHITE);
   tft.setTextSize(3);
