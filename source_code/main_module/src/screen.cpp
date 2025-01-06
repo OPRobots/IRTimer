@@ -31,15 +31,28 @@ static void screen_fast_draw_bitmap(const uint16_t *bitmap) {
 void screen_setup() {
   tft.init(135, 240, SPI_MODE2);
   tft.setRotation(3);
-  screen_show_splash_screen();
 }
 
-void screen_show_splash_screen() {
+void screen_show_splash() {
   tft.fillScreen(ST77XX_WHITE);
   screen_fast_draw_bitmap(splash_screen);
   delay(2000);
-  tft.fillScreen(ST77XX_BLACK);
   // tft.drawRGBBitmap(0, 0, splash_screen, tft.width(), tft.height());
+}
+
+void screen_show_menu(){
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(3);
+  tft.println("Menu");
+  tft.setTextSize(2);
+  tft.println("1. Start");
+  tft.println("2. Stop");
+  tft.println("3. Lap");
+  tft.println("4. Reset");
+  tft.println("5. Server Info");
+  tft.println("6. Exit");
 }
 
 void screen_show_server_info(String ip, String mac, String channel, String status) {
@@ -67,6 +80,7 @@ void screen_show_server_info(String ip, String mac, String channel, String statu
 void screen_show_button_labels() {
   int x = 228;
   int y = 2;
+  tft.setTextSize(2);
   tft.setCursor(x, y);
   tft.fillRect(x - 6, 0, 30, 140, ST77XX_BLACK);
   tft.println("M");
@@ -91,6 +105,34 @@ void screen_show_button_labels() {
   tft.println("P");
   tft.setCursor(x, tft.getCursorY());
 
+  tft.drawRoundRect(222, y - 2, 238, tft.getCursorY() - y + 2, 8, ST77XX_BLUE);
+}
+
+void screen_set_top_button(String label) {
+  int x = 228;
+  int y = 2;
+  tft.setCursor(x, y);
+  tft.setTextSize(2);
+  tft.fillRect(x - 6, 0, 30, 67, ST77XX_BLACK);
+  tft.setTextColor(ST77XX_WHITE);
+  for (int i = 0; i < label.length(); i++) {
+    tft.println(label[i]);
+    tft.setCursor(x, tft.getCursorY());
+  }
+  tft.drawRoundRect(222, 0, 238, tft.getCursorY() - y + 4, 8, ST77XX_BLUE);
+}
+
+void screen_set_bottom_button(String label) {
+  int x = 228;
+  int y = 71;
+  tft.setCursor(x, y);
+  tft.setTextSize(2);
+  tft.fillRect(x - 6, y, 30, 67, ST77XX_BLACK);
+  tft.setTextColor(ST77XX_WHITE);
+  for (int i = 0; i < label.length(); i++) {
+    tft.println(label[i]);
+    tft.setCursor(x, tft.getCursorY());
+  }
   tft.drawRoundRect(222, y - 2, 238, tft.getCursorY() - y + 2, 8, ST77XX_BLUE);
 }
 
