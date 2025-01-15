@@ -1,6 +1,7 @@
 #include "screen.h"
 
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
+SPIClass tftSPI = SPIClass(SPI);
+Adafruit_ST7789 tft = Adafruit_ST7789(&tftSPI, TFT_CS, TFT_DC, TFT_RST);
 static long last_lap_updated_ms = 0;
 
 static void screen_fast_draw_bitmap(const uint16_t *bitmap) {
@@ -29,7 +30,10 @@ static void screen_fast_draw_bitmap(const uint16_t *bitmap) {
 }
 
 void screen_setup() {
-  tft.init(135, 240, SPI_MODE2);
+  tftSPI.begin(TFT_SCLK, 0, TFT_MOSI, TFT_RST);
+
+  tft.init(135, 240);
+  tft.setSPISpeed(80000000);
   tft.setRotation(3);
 }
 
@@ -37,10 +41,11 @@ void screen_show_splash() {
   tft.fillScreen(ST77XX_WHITE);
   screen_fast_draw_bitmap(splash_screen);
   delay(2000);
+  tft.fillScreen(ST77XX_BLACK);
   // tft.drawRGBBitmap(0, 0, splash_screen, tft.width(), tft.height());
 }
 
-void screen_show_menu(){
+void screen_show_menu() {
   tft.fillScreen(ST77XX_BLACK);
   tft.setCursor(0, 0);
   tft.setTextColor(ST77XX_WHITE);
