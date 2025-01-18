@@ -290,7 +290,7 @@ void web_setup() {
     return;
   }
 
-//   screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
+  screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
 
   esp_now_register_recv_cb(data_receive);
 

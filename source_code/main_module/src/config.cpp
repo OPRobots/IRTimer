@@ -13,6 +13,10 @@ void config_setup() {
   pinMode(BTN_MODE_PIN, INPUT_PULLDOWN);
   pinMode(BTN_RESET_PIN, INPUT_PULLDOWN);
 
+  pinMode(BATT_CHARGING_PIN, INPUT);
+  pinMode(BATT_FULL_PIN, INPUT);
+  pinMode(BATT_VOLTAGE_PIN, INPUT);
+
   screen_setup();
   web_setup();
 }
