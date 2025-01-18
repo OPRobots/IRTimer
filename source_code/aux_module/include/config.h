@@ -6,7 +6,7 @@
 #include "utils.h"
 
 #define SENSOR_PIN 1
-#define NEOPIXEL_PIN 21
+#define NEOPIXEL_PIN 10
 
 
 void config_setup();
