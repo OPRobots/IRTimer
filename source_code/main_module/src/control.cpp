@@ -11,7 +11,7 @@ void control_manage_screen() {
     screen_set_top_button("PATO");
     while (digitalRead(BTN_MODE_PIN)) {
     }
-    screen_set_top_button("NODE");
+    screen_set_top_button("MODE");
   }
 
   if (digitalRead(BTN_RESET_PIN)) {
