@@ -5,7 +5,12 @@ static uint32_t current_screen_ms = 0;
 
 static uint8_t menu_index = 0;
 
+static uint32_t battey_blink_ms = 0;
+static bool battery_blink_state = false;
+
 static void set_screen(enum SCREENS screen) {
+  current_screen = screen;
+  current_screen_ms = millis();
   switch (screen) {
     case SCREEN_SPLASH:
       screen_show_splash();
@@ -17,6 +22,22 @@ static void set_screen(enum SCREENS screen) {
       menu_index = 0;
       screen_set_side_selector(menu_index, 2);
       break;
+    case SCREEN_WIFI_INIT:
+      screen_show_wifi_init();
+      if (web_setup()) {
+        set_screen(SCREEN_WIFI_INFO);
+      } else {
+        set_screen(SCREEN_WIFI_FAIL);
+      }
+      break;
+    case SCREEN_WIFI_INFO:
+      screen_show_wifi_info();
+      screen_set_button_text(BUTTON_BOTTOM_RIGHT, "MENU");
+      break;
+    case SCREEN_WIFI_FAIL:
+      screen_show_wifi_fail();
+      screen_set_button_text(BUTTON_BOTTOM_RIGHT, "MENU");
+      break;
     case SCREEN_TIMER:
       screen_show_timer();
       screen_set_button_text(BUTTON_TOP_RIGHT, "RST");
@@ -26,8 +47,6 @@ static void set_screen(enum SCREENS screen) {
       screen_show_unknown();
       break;
   }
-  current_screen = screen;
-  current_screen_ms = millis();
 }
 
 void control_init() {
@@ -50,6 +69,9 @@ void control_manage_screen() {
       }
       if (digitalRead(BTN_BOTTOM_PIN)) {
         switch (menu_index) {
+          case 0:
+            set_screen(SCREEN_WIFI_INIT);
+            break;
           case 1:
             set_screen(SCREEN_TIMER);
             break;
@@ -59,6 +81,13 @@ void control_manage_screen() {
       }
       break;
     case SCREEN_WIFI_INFO:
+    case SCREEN_WIFI_FAIL:
+      if (digitalRead(BTN_BOTTOM_PIN)) {
+        stopwatch_reset();
+        set_screen(SCREEN_MENU);
+        while (digitalRead(BTN_BOTTOM_PIN)) {
+        }
+      }
       break;
     case SCREEN_TIMER:
       stopwatch_check();
@@ -74,5 +103,21 @@ void control_manage_screen() {
         }
       }
       break;
+  }
+}
+
+void control_manage_battery() {
+  if (!digitalRead(BATT_CHARGING_PIN)) {
+    set_led(RGB_POWER, 50, 0, 0);
+  } else if (!digitalRead(BATT_FULL_PIN)) {
+    set_led(RGB_POWER, 0, 50, 0);
+  } else if (get_battery_voltage() < 3.5) {
+    if (millis() - battey_blink_ms > 500) {
+      battery_blink_state = !battery_blink_state;
+      set_led(RGB_POWER, battery_blink_state ? 50 : 0, 0, 0);
+      battey_blink_ms = millis();
+    }
+  } else {
+    set_led(RGB_POWER, 0, 0, 0);
   }
 }

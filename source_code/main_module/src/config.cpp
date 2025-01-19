@@ -18,5 +18,5 @@ void config_setup() {
   pinMode(BATT_VOLTAGE_PIN, INPUT);
 
   screen_setup();
-  web_setup();
+  // web_setup();
 }

@@ -116,3 +116,7 @@ void rainbow_led(enum LEDS led) {
     }
   }
 }
+
+float get_battery_voltage() {
+  return analogRead(BATT_VOLTAGE_PIN)*3.3/4095*3.13;
+}

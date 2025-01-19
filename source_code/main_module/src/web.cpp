@@ -8,6 +8,8 @@ static long last_event_ms = 0;
 const char *ssid = ENV_WIFI_SSID;
 const char *password = ENV_WIFI_PASS;
 
+static bool esp_now_status = false;
+
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html lang="es">
@@ -282,15 +284,21 @@ void data_receive(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
   stopwatch_lap();
 }
 
-void web_setup() {
+bool web_setup() {
+  if (WiFi.isConnected()) {
+    return true;
+  }
+
   WiFi.mode(WIFI_AP_STA);
   WiFi.begin(ssid, password);
   if (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.printf("WiFi Failed!\n");
-    return;
+    return false;
   }
 
-//   screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
+  //   screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
+
+  esp_now_status = esp_now_init() == ESP_OK;
 
   esp_now_register_recv_cb(data_receive);
 
@@ -309,6 +317,7 @@ void web_setup() {
   server.addHandler(&events);
 
   server.begin();
+  return true;
 }
 
 void web_start() {
@@ -337,4 +346,24 @@ void web_reset() {
     events.send("reset", "reset", millis());
     last_event_ms = millis();
   }
+}
+
+bool web_connected() {
+  return WiFi.isConnected();
+}
+
+String web_get_ip() {
+  return WiFi.localIP().toString();
+}
+
+String web_get_mac() {
+  return (String)WiFi.macAddress();
+}
+
+String web_get_channel() {
+  return (String)WiFi.channel();
+}
+
+String web_get_status() {
+  return esp_now_status ? "Success" : "Failed";
 }

@@ -20,4 +20,6 @@ void clear_led(enum LEDS led);
 void blink_led(enum LEDS led, int r, int g, int b, int ms);
 void rainbow_led(enum LEDS led);
 
+float get_battery_voltage();
+
 #endif

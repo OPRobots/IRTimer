@@ -5,6 +5,7 @@
 #include "control.h"
 #include "splash_screen.h"
 #include "menu_screen.h"
+#include "icon_wifi.h"
 #include "utils.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_I2CDevice.h>
@@ -28,7 +29,9 @@ void screen_show_unknown();
 void screen_show_splash();
 void screen_show_menu();
 void screen_show_timer();
-void screen_show_server_info(String ip, String mac, String channel, String status);
+void screen_show_wifi_init();
+void screen_show_wifi_info();
+void screen_show_wifi_fail();
 
 void screen_set_button_text(enum BUTTONS button, String label);
 void screen_set_button_icon(enum BUTTONS button, enum ICONS icon);

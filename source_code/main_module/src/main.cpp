@@ -16,40 +16,5 @@ void loop() {
   // rc5_update();
   // stopwatch_check();
   control_manage_screen();
-
-  // set_led(RGB_POWER, 255, 0, 0);
-  // set_led(RGB_CONNECTION, 0, 255, 0);
-  // rainbow_led(RGB_POWER);
-  // rainbow_led(RGB_CONNECTION);
-
-  // Serial.print("BTN_MODE: ");
-  // Serial.print(digitalRead(BTN_TOP_PIN));
-  // Serial.print(" BTN_RESET: ");
-  // Serial.println(digitalRead(BTN_BOTTOM_PIN));
-
-  if(!digitalRead(SENSOR_PIN)){
-    set_led(RGB_POWER, 50, 0, 0);
-  }else{
-    set_led(RGB_POWER, 0, 50, 0);
-  }
-
-  // if(!digitalRead(BATT_CHARGING_PIN)){
-  //   set_led(RGB_POWER, 50, 0, 0);
-  // }else{
-  //   set_led(RGB_POWER, 0, 0, 0);
-  // }
-
-  // if(!digitalRead(BATT_FULL_PIN)){
-  //   set_led(RGB_CONNECTION, 0, 50, 0);
-  // }else{
-  //   set_led(RGB_CONNECTION, 0, 0, 0);
-  // }
-
-  // Serial.print("BATT_CHARGING_PIN: ");
-  // Serial.print(!digitalRead(BATT_CHARGING_PIN));
-  // Serial.print(" BATT_FULL_PIN: ");
-  // Serial.print(!digitalRead(BATT_FULL_PIN));
-  // Serial.print(" BATT_VOLTAGE_PIN: ");
-  // Serial.println(analogRead(BATT_VOLTAGE_PIN)*3.3/4095*3.13);
-  // delay(100);
+  control_manage_battery();
 }

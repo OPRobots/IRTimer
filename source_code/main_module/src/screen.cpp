@@ -58,28 +58,49 @@ void screen_show_menu() {
 
 void screen_show_timer() {
   tft.fillScreen(ST77XX_BLACK);
+  // screen_fast_draw_bitmap(icon_wifi, ST77XX_BLACK);
+  if(web_connected()) {
+    tft.drawRGBBitmap(0, 0, icon_wifi, 21, 21);
+  }else{
+    tft.drawRect(0, 0, 21, 21, ST77XX_BLACK);
+  }
+  
   tft.setCursor(0, 0);
 }
 
-void screen_show_server_info(String ip, String mac, String channel, String status) {
+void screen_show_wifi_init() {
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(2);
+  tft.println("Connecting to\nWiFi...");
+}
+
+void screen_show_wifi_info() {
   tft.fillScreen(ST77XX_BLACK);
   tft.setCursor(0, 0);
   tft.setTextColor(ST77XX_WHITE);
   tft.setTextSize(2);
   tft.println("IP Address:");
   tft.setTextSize(3);
-  tft.println(ip);
+  tft.println(web_get_ip());
   tft.setTextSize(2);
   tft.println("MAC Address:");
   tft.setTextSize(3);
-  tft.println(mac);
+  tft.println(web_get_mac());
   tft.setTextSize(2);
   tft.print("Channel: ");
-  tft.println(channel);
+  tft.println(web_get_channel());
   tft.print("Status: ");
-  tft.println(status);
-  delay(2000);
+  tft.println(web_get_status());
+}
+
+void screen_show_wifi_fail() {
   tft.fillScreen(ST77XX_BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(2);
+  tft.println("WiFi\nFailed!");
 }
 
 void screen_set_button_text(enum BUTTONS button, String label) {
