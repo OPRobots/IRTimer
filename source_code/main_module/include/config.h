@@ -10,8 +10,8 @@
 #define SENSOR_PIN 1
 #define NEOPIXEL_PIN 10
 
-#define BTN_MODE_PIN 6
-#define BTN_RESET_PIN 5
+#define BTN_TOP_PIN 6
+#define BTN_BOTTOM_PIN 5
 
 #define BATT_CHARGING_PIN 3
 #define BATT_FULL_PIN 2

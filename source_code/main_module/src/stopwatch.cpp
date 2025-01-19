@@ -18,11 +18,13 @@ void stopwatch_start() {
   stopwatch_reset();
   is_running = true;
   start_ms = millis();
+  web_start();
 }
 
 void stopwatch_stop() {
   is_running = false;
   start_ms = 0;
+  web_stop();
 }
 
 void stopwatch_lap() {
@@ -49,6 +51,7 @@ void stopwatch_lap() {
     last_laps_number[0] = lap_number;
     last_lap_ms = lap_ms;
   }
+  web_lap();
 }
 
 void stopwatch_reset() {
@@ -62,11 +65,11 @@ void stopwatch_reset() {
     last_laps_delta[i] = 0;
     last_laps_number[i] = 0;
   }
+  web_reset();
 }
 
 void stopwatch_check() {
   if (!digitalRead(SENSOR_PIN)) {
-    web_lap();
     stopwatch_lap();
   }
   if (millis() - last_timer_update_ms >= 10) {

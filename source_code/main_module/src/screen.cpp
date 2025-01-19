@@ -4,19 +4,19 @@ SPIClass tftSPI = SPIClass(SPI);
 Adafruit_ST7789 tft = Adafruit_ST7789(&tftSPI, TFT_CS, TFT_DC, TFT_RST);
 static long last_lap_updated_ms = 0;
 
-static void screen_fast_draw_bitmap(const uint16_t *bitmap) {
+static void screen_fast_draw_bitmap(const uint16_t *bitmap, uint16_t bg_color) {
   int total = tft.width() * tft.height();
   uint8_t x = 0;
   uint8_t y = 0;
   uint16_t draw_color = 0;
   int count_color = 0;
   for (int i = 0; i < total; i++) {
-    if (splash_screen[i] != 0xFFFF) {
+    if (bitmap[i] != bg_color) {
       x = i % tft.width();
       y = i / tft.width();
       count_color = 1;
-      draw_color = splash_screen[i];
-      while (i + 1 < total && splash_screen[i + 1] == draw_color) {
+      draw_color = bitmap[i];
+      while (i + 1 < total && bitmap[i + 1] == draw_color) {
         i++;
         count_color++;
       }
@@ -37,27 +37,28 @@ void screen_setup() {
   tft.setRotation(3);
 }
 
+void screen_show_unknown() {
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setCursor(0, 0);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(3);
+  tft.println("Unknown\nscreen\n:'(");
+}
+
 void screen_show_splash() {
   tft.fillScreen(ST77XX_WHITE);
-  screen_fast_draw_bitmap(splash_screen);
-  delay(2000);
-  tft.fillScreen(ST77XX_BLACK);
+  screen_fast_draw_bitmap(splash_screen, ST77XX_WHITE);
   // tft.drawRGBBitmap(0, 0, splash_screen, tft.width(), tft.height());
 }
 
 void screen_show_menu() {
   tft.fillScreen(ST77XX_BLACK);
+  screen_fast_draw_bitmap(menu_screen, ST77XX_BLACK);
+}
+
+void screen_show_timer() {
+  tft.fillScreen(ST77XX_BLACK);
   tft.setCursor(0, 0);
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(3);
-  tft.println("Menu");
-  tft.setTextSize(2);
-  tft.println("1. Start");
-  tft.println("2. Stop");
-  tft.println("3. Lap");
-  tft.println("4. Reset");
-  tft.println("5. Server Info");
-  tft.println("6. Exit");
 }
 
 void screen_show_server_info(String ip, String mac, String channel, String status) {
@@ -79,57 +80,30 @@ void screen_show_server_info(String ip, String mac, String channel, String statu
   tft.println(status);
   delay(2000);
   tft.fillScreen(ST77XX_BLACK);
-  screen_show_button_labels();
 }
 
-void screen_show_button_labels() {
-  int x = 228;
-  int y = 2;
-  tft.setTextSize(2);
-  tft.setCursor(x, y);
-  tft.fillRect(x - 6, 0, 30, 140, ST77XX_BLACK);
-  tft.println("M");
-  tft.setCursor(x, tft.getCursorY());
-  tft.println("O");
-  tft.setCursor(x, tft.getCursorY());
-  tft.println("D");
-  tft.setCursor(x, tft.getCursorY());
-  tft.println("E");
-  tft.setCursor(x, tft.getCursorY());
-
-  tft.drawRoundRect(222, 0, 238, tft.getCursorY() - y + 4, 8, ST77XX_BLUE);
-
-  y = tft.getCursorY() + 5;
-  tft.setCursor(x, y);
-  tft.println("S");
-  tft.setCursor(x, tft.getCursorY());
-  tft.println("T");
-  tft.setCursor(x, tft.getCursorY());
-  tft.println("O");
-  tft.setCursor(x, tft.getCursorY());
-  tft.println("P");
-  tft.setCursor(x, tft.getCursorY());
-
-  tft.drawRoundRect(222, y - 2, 238, tft.getCursorY() - y + 2, 8, ST77XX_BLUE);
-}
-
-void screen_set_top_button(String label) {
-  int x = 228;
-  int y = 2;
-  tft.setCursor(x, y);
-  tft.setTextSize(2);
-  tft.fillRect(x - 6, 0, 30, 67, ST77XX_BLACK);
-  tft.setTextColor(ST77XX_WHITE);
-  for (int i = 0; i < label.length(); i++) {
-    tft.println(label[i]);
-    tft.setCursor(x, tft.getCursorY());
+void screen_set_button_text(enum BUTTONS button, String label) {
+  int x = 0;
+  int y = 0;
+  uint8_t y_rect = 0;
+  uint8_t h_rect = 0;
+  switch (button) {
+    case BUTTON_TOP_RIGHT:
+      x = 228;
+      y = 2;
+      y_rect = 0;
+      h_rect = 4;
+      break;
+    case BUTTON_BOTTOM_RIGHT:
+      x = 228;
+      y = 71;
+      if (label.length() < 4) {
+        y += 16 * (4 - label.length());
+      }
+      y_rect = y - 2;
+      h_rect = 2;
+      break;
   }
-  tft.drawRoundRect(222, 0, 238, tft.getCursorY() - y + 4, 8, ST77XX_BLUE);
-}
-
-void screen_set_bottom_button(String label) {
-  int x = 228;
-  int y = 71;
   tft.setCursor(x, y);
   tft.setTextSize(2);
   tft.fillRect(x - 6, y, 30, 67, ST77XX_BLACK);
@@ -138,7 +112,90 @@ void screen_set_bottom_button(String label) {
     tft.println(label[i]);
     tft.setCursor(x, tft.getCursorY());
   }
-  tft.drawRoundRect(222, y - 2, 238, tft.getCursorY() - y + 2, 8, ST77XX_BLUE);
+  tft.drawRoundRect(222, y_rect, 238, tft.getCursorY() - y + h_rect, 8, ST77XX_BLUE);
+}
+
+void screen_set_button_icon(enum BUTTONS button, enum ICONS icon) {
+  int x = 0;
+  int y = 0;
+  uint8_t y_rect = 0;
+  uint8_t h_rect = 0;
+  switch (button) {
+    case BUTTON_TOP_RIGHT:
+      x = 228;
+      y = 2;
+      break;
+    case BUTTON_BOTTOM_RIGHT:
+      x = 228;
+      y = 71;
+      break;
+  }
+  tft.setCursor(x, y);
+  tft.setTextSize(2);
+  tft.fillRect(x - 6, y, 30, 67, ST77XX_BLACK);
+
+  switch (icon) {
+    case ICON_UP_DOWN:
+
+      switch (button) {
+        case BUTTON_TOP_RIGHT:
+          x = 228;
+          y = 4;
+          y_rect = 0;
+          h_rect = 4;
+          break;
+        case BUTTON_BOTTOM_RIGHT:
+          x = 228;
+          y = 105;
+          y_rect = y - 3;
+          h_rect = 2;
+          break;
+      }
+      tft.fillTriangle(x, y + 10, x + 5, y, x + 10, y + 10, ST77XX_WHITE);
+      tft.fillTriangle(x, y + 15, x + 5, y + 25, x + 10, y + 15, ST77XX_WHITE);
+      tft.setCursor(x, y + 30);
+      break;
+    case ICON_CHECK:
+      switch (button) {
+        case BUTTON_TOP_RIGHT:
+          x = 228;
+          y = 2;
+          y_rect = 0;
+          h_rect = 2;
+          break;
+        case BUTTON_BOTTOM_RIGHT:
+          x = 228;
+          y = 115;
+          y_rect = y - 2;
+          h_rect = 2;
+          break;
+      }
+      tft.drawLine(x, y + 10, x + 5, y + 15, ST77XX_WHITE);
+      tft.drawLine(x + 5, y + 15, x + 10, y + 2, ST77XX_WHITE);
+      tft.setCursor(x, y + 20);
+      break;
+  }
+
+  tft.drawRoundRect(222, y_rect, 238, tft.getCursorY() - y + h_rect, 8, ST77XX_BLUE);
+}
+
+void screen_set_side_selector(uint8_t index, uint8_t count) {
+  tft.fillRect(0, 0, 20, 240, ST77XX_BLACK);
+
+  uint8_t selector_height = 0;
+  switch (count) {
+    case 2:
+      selector_height = 40;
+      break;
+    default:
+      return;
+      break;
+  }
+  uint8_t margin = (135 - (selector_height * count)) / (count + 1);
+  uint8_t y = margin + (selector_height * index) + (margin * index) + selector_height / 2;
+
+  // tft.fillRect(0, y-20, 10, 40, ST77XX_WHITE);
+  tft.fillTriangle(0, y - 10, 10, y, 0, y + 10, ST77XX_WHITE);
 }
 
 long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, long best_lap_ms, long last_lap_ms, long *last_laps, long *last_laps_delta, int *last_laps_number, bool update_best_lap) {
@@ -205,53 +262,4 @@ long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, lon
     }
   }
   return time_ms;
-  // tft.print("L1 ");
-  // tft.setTextColor(ST77XX_MAGENTA);
-  // tft.print("BEST");
-  // tft.setTextColor(ST77XX_WHITE);
-  // tft.println(" 00:00.000");
-  // tft.setTextSize(1);
-  // tft.println("");
-  // tft.setTextSize(2);
-  // tft.print("L1 ");
-  // tft.setTextColor(ST77XX_GREEN);
-  // tft.print("-3.6");
-  // tft.setTextColor(ST77XX_WHITE);
-  // tft.println(" 00:00.000");
-  // tft.print("L2 ");
-  // tft.setTextColor(ST77XX_ORANGE);
-  // tft.print("+0.8");
-  // tft.setTextColor(ST77XX_WHITE);
-  // tft.println(" 00:00.000");
-  // tft.println("L3 +0.0 00:00.000");
-  // tft.println("L4 +0.0 00:00.000");
-  // tft.println("L5 +0.0 00:00.000");
-
-  // tft.setTextColor(ST77XX_WHITE);
-  // tft.setTextSize(3);
-  // int x1 = 25;
-  // int char_width = 18;
-  // int char_height = 30;
-  // int char_count = 9;
-  // String lastTime = "00:00:000";
-  // while (true) {
-  //   String time = formatTimeMs(millis());
-  //   if (time != lastTime) {
-  //     int first_char = 0;
-  //     int char_count = 0;
-  //     for (int i = 0; i < 10; i++) {
-  //       if (time[i] != lastTime[i]) {
-  //         if (first_char == 0) {
-  //           first_char = i;
-  //         }
-  //         char_count++;
-  //       }
-  //     }
-  //     tft.fillRect(x1 + (first_char * char_width), 0, char_width * char_count, char_height, ST77XX_BLACK);
-  //     tft.setCursor(x1 + (first_char * char_width), 0);
-  //     tft.println(time.substring(first_char));
-  //   }
-  //   lastTime = time;
-  //   delay(50);
-  // }
 }
