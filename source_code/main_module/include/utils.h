@@ -6,7 +6,7 @@
 #include <Arduino.h>
 
 
-String formatDeltaMs(long delta);
+String formatDeltaMs(long delta, bool trim);
 String formatTimeMs(unsigned long millis);
 
 enum LEDS {

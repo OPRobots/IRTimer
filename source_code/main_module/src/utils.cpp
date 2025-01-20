@@ -1,6 +1,5 @@
 #include "utils.h"
 
-
 static Adafruit_NeoPixel pixels(2, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 static bool toggle_led_state[2] = {false, false};
@@ -11,16 +10,18 @@ int rainbow_led_RGB[2][3] = {{255, 0, 0}, {255, 0, 0}};
 int rainbow_led_color_desc[2] = {0, 0};
 int rainbow_led_color_asc[2] = {1, 1};
 
-String formatDeltaMs(long delta) {
+String formatDeltaMs(long delta, bool trim) {
   char buffer[10];
   float delta_s = abs(delta) / 1000.0;
   sprintf(buffer, "%0.3f", delta_s);
   String delta_str = String(buffer);
 
-  if (delta_s < 1.0) {
-    delta_str = delta_str.substring(1, 5);
-  }else{
-    delta_str = delta_str.substring(0, 4);
+  if (trim) {
+    if (delta_s < 1.0) {
+      delta_str = delta_str.substring(1, 5);
+    } else {
+      delta_str = delta_str.substring(0, 4);
+    }
   }
 
   String delta_final;
@@ -45,7 +46,6 @@ String formatTimeMs(unsigned long millis) {
   }
   return String(buffer);
 }
-
 
 /**
  * @brief Activa un LED con un color determinado
@@ -118,5 +118,5 @@ void rainbow_led(enum LEDS led) {
 }
 
 float get_battery_voltage() {
-  return analogRead(BATT_VOLTAGE_PIN)*3.3/4095*3.13;
+  return analogRead(BATT_VOLTAGE_PIN) * 3.3 / 4095 * 3.13;
 }

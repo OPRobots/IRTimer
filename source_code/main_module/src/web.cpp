@@ -321,10 +321,10 @@ bool web_setup() {
 }
 
 void web_start() {
-  if (millis() > last_event_ms + 1000) {
+//   if (millis() > last_event_ms + 1000) {
     events.send("start", "start", millis());
     last_event_ms = millis();
-  }
+//   }
 }
 
 void web_stop() {

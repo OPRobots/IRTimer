@@ -59,12 +59,12 @@ void screen_show_menu() {
 void screen_show_timer() {
   tft.fillScreen(ST77XX_BLACK);
   // screen_fast_draw_bitmap(icon_wifi, ST77XX_BLACK);
-  if(web_connected()) {
+  if (web_connected()) {
     tft.drawRGBBitmap(0, 0, icon_wifi, 21, 21);
-  }else{
+  } else {
     tft.drawRect(0, 0, 21, 21, ST77XX_BLACK);
   }
-  
+
   tft.setCursor(0, 0);
 }
 
@@ -220,6 +220,31 @@ void screen_set_side_selector(uint8_t index, uint8_t count) {
 }
 
 long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, long best_lap_ms, long last_lap_ms, long *last_laps, long *last_laps_delta, int *last_laps_number, bool update_best_lap) {
+  if (last_lap_updated_ms != last_lap_ms && time_ms != 0) {
+    tft.fillRect(0, 0, 220, 135, ST77XX_BLACK);
+    tft.setTextColor(ST77XX_WHITE);
+    tft.setTextSize(3);
+    tft.setCursor(40, 134 / 2 - 10);
+    String lap_time = formatTimeMs(last_lap_ms);
+    tft.println(lap_time);
+
+    tft.setTextSize(2);
+    if (last_laps_delta[0] <= 0) {
+      tft.setTextColor(ST77XX_GREEN);
+    } else {
+      tft.setTextColor(ST77XX_ORANGE);
+    }
+    String delta = formatDeltaMs(last_laps_delta[0], false);
+    tft.setCursor(220-21-(12*delta.length()), tft.getCursorY());
+    tft.printf("%s", delta);
+
+    delay(2000);
+    tft.fillRect(0, 0, 220, 135, ST77XX_BLACK);
+    last_time_ms = 1;
+    time_ms = 0;
+    update_best_lap = true;
+  }
+
   tft.setTextColor(ST77XX_WHITE);
   tft.setTextSize(3);
   int x1 = 30;
@@ -276,7 +301,7 @@ long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, lon
         tft.setTextColor(ST77XX_ORANGE);
       }
       tft.setCursor(tft.getCursorX() + 6, tft.getCursorY());
-      tft.printf("%s", formatDeltaMs(last_laps_delta[i]));
+      tft.printf("%s", formatDeltaMs(last_laps_delta[i], true));
       tft.setTextColor(ST77XX_WHITE);
       tft.setCursor(tft.getCursorX() + 6, tft.getCursorY());
       tft.println(formatTimeMs(last_laps[i]));

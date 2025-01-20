@@ -1,7 +1,7 @@
 #include "stopwatch.h"
 
 static bool is_running = false;
-static long last_timer_ms = 0;
+static long last_time_ms = 0;
 static long last_timer_update_ms = 0;
 static bool update_last_laps = false;
 static bool last_timer_update_laps_updated = false;
@@ -73,7 +73,7 @@ void stopwatch_check() {
     stopwatch_lap();
   }
   if (millis() - last_timer_update_ms >= 10) {
-    last_timer_ms = screen_update_timmings(is_running ? (millis() - start_ms) : 0, last_timer_ms, lap_number, best_lap_ms, last_lap_ms, last_laps, last_laps_delta, last_laps_number, best_lap_ms == last_lap_ms);
+    last_time_ms = screen_update_timmings(is_running ? (millis() - start_ms) : 0, last_time_ms, lap_number, best_lap_ms, last_lap_ms, last_laps, last_laps_delta, last_laps_number, best_lap_ms == last_lap_ms);
 
     last_timer_update_ms = millis();
   }
