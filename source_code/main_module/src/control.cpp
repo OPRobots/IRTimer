@@ -8,6 +8,8 @@ static uint8_t menu_index = 0;
 static uint32_t battey_blink_ms = 0;
 static bool battery_blink_state = false;
 
+static enum RC5_EVENTS pending_event = EVENT_NONE;
+
 static void set_screen(enum SCREENS screen) {
   current_screen = screen;
   current_screen_ms = millis();
@@ -120,4 +122,20 @@ void control_manage_battery() {
   } else {
     set_led(RGB_POWER, 0, 0, 0);
   }
+}
+
+void control_manage_pending_event() {
+  switch (pending_event) {
+    case EVENT_RESET:
+      stopwatch_reset();
+      break;
+    case EVENT_STOP:
+      stopwatch_stop();
+      break;
+  }
+  pending_event = EVENT_NONE;
+}
+
+void control_set_pending_event(enum RC5_EVENTS event) {
+  pending_event = event;
 }

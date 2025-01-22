@@ -280,7 +280,6 @@ void data_receive(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
   uint8_t data;
   memcpy(&data, incomingData, len);
   Serial.println(data);
-  web_lap();
   stopwatch_lap();
 }
 

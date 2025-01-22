@@ -17,4 +17,5 @@ void loop() {
   // stopwatch_check();
   control_manage_screen();
   control_manage_battery();
+  control_manage_pending_event();
 }

@@ -8,7 +8,7 @@ void config_setup() {
   rc5_init();
 
   pinMode(IR_PIN, INPUT_PULLUP);
-  // attachInterrupt(digitalPinToInterrupt(IR_PIN), rc5_isr, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(IR_PIN), rc5_isr, CHANGE);
 
   pinMode(BTN_TOP_PIN, INPUT_PULLDOWN);
   pinMode(BTN_BOTTOM_PIN, INPUT_PULLDOWN);

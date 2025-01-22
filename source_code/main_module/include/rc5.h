@@ -3,7 +3,7 @@
 
 
 #include "config.h"
-#include "web.h"
+#include "control.h"
 #include "stdint.h"
 
 enum RC5_TRIGGER {

@@ -63,13 +63,13 @@ static void rc5_manage_command(uint16_t message) {
     case ADDRESS_PROG:
       rc5_stored_data[0] = command;
       rc5_stored_data[1] = command + 1;
-      web_reset();
+      control_set_pending_event(EVENT_RESET);
       break;
     case ADDRESS_COMP:
       if (command == rc5_stored_data[DATA_START]) {
-        web_stop();
+        control_set_pending_event(EVENT_STOP);
       } else if (command == rc5_stored_data[DATA_STOP]) {
-        web_stop();
+        control_set_pending_event(EVENT_STOP);
       }
       break;
   }

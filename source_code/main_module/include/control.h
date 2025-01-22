@@ -14,8 +14,17 @@ enum SCREENS {
   SCREEN_TIMER,
 };
 
+enum RC5_EVENTS{
+  EVENT_NONE,
+  EVENT_RESET,
+  EVENT_STOP,
+};
+
 void control_init();
 void control_manage_screen();
 void control_manage_battery();
+
+void control_manage_pending_event();
+void control_set_pending_event(enum RC5_EVENTS event);
 
 #endif
