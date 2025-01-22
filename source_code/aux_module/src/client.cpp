@@ -1,7 +1,7 @@
 #include "client.h"
 
 #define board_ID 1
-uint8_t broadcastAddress[] = {0x64, 0xE8, 0x33, 0x80, 0x92, 0x00};
+uint8_t broadcastAddress[] = {0x40, 0x4C, 0xCA, 0xF5, 0x75, 0x74};
 
 const char *ssid = ENV_WIFI_SSID;
 const char *password = ENV_WIFI_PASS;
