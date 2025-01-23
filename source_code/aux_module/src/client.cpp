@@ -48,7 +48,18 @@ void client_setup() {
   set_led(RGB_CONNECTION, 0, 10, 0);
 }
 
-void client_lap() {
+String client_get_mac() {
+  return (String)WiFi.macAddress();
+}
+
+void client_start() {
   uint8_t data = 27;
+  Serial.println("Sending Start Signal");
+  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
+}
+
+void client_finish() {
+  uint8_t data = 42;
+  Serial.println("Sending Finish Signal");
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
 }

@@ -1,13 +1,16 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include "utils.h"
 #include <WiFi.h>
 #include <esp_now.h>
 #include <esp_wifi.h>
-#include "utils.h"
+
 
 void client_setup();
+void client_start();
+void client_finish();
 
-void client_lap();
+String client_get_mac();
 
 #endif

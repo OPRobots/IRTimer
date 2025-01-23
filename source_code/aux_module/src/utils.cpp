@@ -10,6 +10,8 @@ int rainbow_led_RGB[2][3] = {{255, 0, 0}, {255, 0, 0}};
 int rainbow_led_color_desc[2] = {0, 0};
 int rainbow_led_color_asc[2] = {1, 1};
 
+static uint32_t battey_blink_ms = 0;
+static bool battery_blink_state = false;
 
 /**
  * @brief Activa un LED con un color determinado
@@ -79,4 +81,24 @@ void rainbow_led(enum LEDS led) {
       rainbow_led_color_asc[led] = rainbow_led_color_desc[led] == 2 ? 0 : rainbow_led_color_desc[led] + 1;
     }
   }
+}
+
+void manage_battery() {
+  if (!digitalRead(BATT_CHARGING_PIN)) {
+    set_led(RGB_POWER, 50, 0, 0);
+  } else if (!digitalRead(BATT_FULL_PIN)) {
+    set_led(RGB_POWER, 0, 50, 0);
+  } else if (get_battery_voltage() < 3.5) {
+    if (millis() - battey_blink_ms > 500) {
+      battery_blink_state = !battery_blink_state;
+      set_led(RGB_POWER, battery_blink_state ? 50 : 0, 0, 0);
+      battey_blink_ms = millis();
+    }
+  } else {
+    set_led(RGB_POWER, 0, 0, 0);
+  }
+}
+
+float get_battery_voltage() {
+  return analogRead(BATT_VOLTAGE_PIN) * 3.3 / 4095 * 3.13;
 }
