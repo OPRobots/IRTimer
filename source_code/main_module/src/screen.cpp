@@ -220,53 +220,16 @@ void screen_set_side_selector(uint8_t index, uint8_t count) {
 }
 
 long screen_update_timmings(long time_ms, long last_time_ms, int lap_number, long best_lap_ms, long last_lap_ms, long *last_laps, long *last_laps_delta, int *last_laps_number, bool update_best_lap) {
-  if (last_lap_updated_ms != last_lap_ms && time_ms != 0) {
-    tft.fillRect(0, 0, 220, 135, ST77XX_BLACK);
-    tft.setTextColor(ST77XX_WHITE);
-    tft.setTextSize(3);
-    tft.setCursor(40, 134 / 2 - 10);
-    String lap_time = formatTimeMs(last_lap_ms);
-    tft.println(lap_time);
-
-    tft.setTextSize(2);
-    if (last_laps_delta[0] <= 0) {
-      tft.setTextColor(ST77XX_GREEN);
-    } else {
-      tft.setTextColor(ST77XX_ORANGE);
-    }
-    String delta = formatDeltaMs(last_laps_delta[0], false);
-    tft.setCursor(220-21-(12*delta.length()), tft.getCursorY());
-    tft.printf("%s", delta);
-
-    delay(2000);
-    tft.fillRect(0, 0, 220, 135, ST77XX_BLACK);
-    last_time_ms = 1;
-    time_ms = 0;
-    update_best_lap = true;
-  }
-
-  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
   tft.setTextSize(3);
-  int x1 = 30;
-  int char_width = 18;
-  int char_height = 30;
-  int char_count = 9;
-  String lastTime = formatTimeMs(last_time_ms);
-  String time = formatTimeMs(time_ms);
-  if (time != lastTime || last_time_ms == 0 || time_ms == 0) {
-    int first_char = 0;
-    int char_count = 0;
-    for (int i = 0; i < 10; i++) {
-      if (time[i] != lastTime[i] && last_time_ms != 0) {
-        if (first_char == 0) {
-          first_char = i;
-        }
-        char_count++;
-      }
+  if (time_ms == 0 || time_ms > 1000 || last_lap_ms == 0) {
+    int x1 = 30;
+    String lastTime = formatTimeMs(last_time_ms);
+    String time = formatTimeMs(time_ms);
+    if (time != lastTime || last_time_ms == 0 || time_ms == 0) {
+      tft.setCursor(x1, 0);
+      tft.println(time);
     }
-    tft.fillRect(x1 + (first_char * char_width), 0, char_width * char_count, char_height, ST77XX_BLACK);
-    tft.setCursor(x1 + (first_char * char_width), 0);
-    tft.println(time.substring(first_char));
   }
 
   if (last_lap_updated_ms != last_lap_ms) {
