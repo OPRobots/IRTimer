@@ -15,7 +15,7 @@ static long last_laps_delta[5] = {0, 0, 0, 0, 0};
 static int last_laps_number[5] = {0, 0, 0, 0, 0};
 
 void stopwatch_start() {
-  stopwatch_reset();
+  // stopwatch_reset();
   is_running = true;
   start_ms = millis();
   web_start();

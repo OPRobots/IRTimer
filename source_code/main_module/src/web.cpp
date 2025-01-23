@@ -279,8 +279,16 @@ void data_receive(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
   // store incomingData into a variable
   uint8_t data;
   memcpy(&data, incomingData, len);
+  switch (data) {
+    case 27:
+      stopwatch_lap();
+      break;
+    case 42:
+      stopwatch_lap();
+      stopwatch_stop();
+      break;
+  }
   Serial.println(data);
-  stopwatch_lap();
 }
 
 bool web_setup() {
@@ -320,10 +328,10 @@ bool web_setup() {
 }
 
 void web_start() {
-//   if (millis() > last_event_ms + 1000) {
-    events.send("start", "start", millis());
-    last_event_ms = millis();
-//   }
+  //   if (millis() > last_event_ms + 1000) {
+  events.send("start", "start", millis());
+  last_event_ms = millis();
+  //   }
 }
 
 void web_stop() {
