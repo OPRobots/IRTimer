@@ -35,6 +35,7 @@ void stopwatch_lap() {
     if (lap_ms < 1000) {
       return;
     }
+    web_lap();
     lap_number++;
     update_last_laps = true;
     start_ms = millis();
@@ -51,7 +52,6 @@ void stopwatch_lap() {
     last_laps_number[0] = lap_number;
     last_lap_ms = lap_ms;
   }
-  web_lap();
 }
 
 void stopwatch_reset() {

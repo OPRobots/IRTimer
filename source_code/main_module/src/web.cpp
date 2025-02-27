@@ -86,7 +86,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
 
-        let timer;
+        let timer = undefined;
         let startTime = 0;
 
         let lapCounter = 0;
@@ -215,15 +215,20 @@ const char index_html[] PROGMEM = R"rawliteral(
         }
 
         var start = function () {
-            reset();
+            console.log('start');
+            stop();
             startTime = Date.now();
             timer = setInterval(__handleTimer, 8);
-            __clearLapRows();
+            // __clearLapRows();
             // setTimeout(stop, 5000);
         }
 
         var stop = function () {
-            clearInterval(timer);
+            console.log('stop');
+            if(timer != undefined){
+                clearInterval(timer);
+                timer = undefined;
+            }
             startTime = 0;
             lastLapTime = 0;
             bestLapTime = 0;
@@ -231,6 +236,7 @@ const char index_html[] PROGMEM = R"rawliteral(
         }
 
         var lap = function () {
+            console.log('lap');
             if (startTime == 0) {
                 start();
                 return;
@@ -244,6 +250,7 @@ const char index_html[] PROGMEM = R"rawliteral(
         }
 
         var reset = function () {
+            console.log('reset');
             stop();
             __clearLapRows();
             lapCounter = 0;
@@ -328,17 +335,17 @@ bool web_setup() {
 }
 
 void web_start() {
-  //   if (millis() > last_event_ms + 1000) {
-  events.send("start", "start", millis());
-  last_event_ms = millis();
-  //   }
+  if (millis() > last_event_ms + 1000) {
+    events.send("start", "start", millis());
+    last_event_ms = millis();
+  }
 }
 
 void web_stop() {
-  if (millis() > last_event_ms + 1000) {
+//   if (millis() > last_event_ms + 1000) {
     events.send("stop", "stop", millis());
     last_event_ms = millis();
-  }
+//   }
 }
 
 void web_lap() {
