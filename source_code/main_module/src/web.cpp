@@ -288,9 +288,11 @@ void data_receive(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
   memcpy(&data, incomingData, len);
   switch (data) {
     case 27:
+      stopwatch_disable_sensor_check();
       stopwatch_lap();
       break;
     case 42:
+      stopwatch_disable_sensor_check();
       stopwatch_lap();
       stopwatch_stop();
       break;
@@ -305,10 +307,6 @@ bool web_setup() {
 
   WiFi.mode(WIFI_AP_STA);
   WiFi.begin(ssid, password);
-  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.printf("WiFi Failed!\n");
-    return false;
-  }
 
   //   screen_show_server_info(WiFi.localIP().toString(), (String)WiFi.macAddress(), (String)WiFi.channel(), esp_now_init() != ESP_OK ? "Failed" : "Success");
 
@@ -331,6 +329,11 @@ bool web_setup() {
   server.addHandler(&events);
 
   server.begin();
+  
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.printf("WiFi Failed!\n");
+    return false;
+  }
   return true;
 }
 
@@ -342,10 +345,10 @@ void web_start() {
 }
 
 void web_stop() {
-//   if (millis() > last_event_ms + 1000) {
-    events.send("stop", "stop", millis());
-    last_event_ms = millis();
-//   }
+  //   if (millis() > last_event_ms + 1000) {
+  events.send("stop", "stop", millis());
+  last_event_ms = millis();
+  //   }
 }
 
 void web_lap() {

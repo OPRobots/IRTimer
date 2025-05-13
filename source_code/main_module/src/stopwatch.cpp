@@ -1,5 +1,6 @@
 #include "stopwatch.h"
 
+static bool sensor_check_enabled = true;
 static bool is_running = false;
 static long last_time_ms = 0;
 static long last_timer_update_ms = 0;
@@ -13,6 +14,10 @@ static long best_lap_ms = 0;
 static long last_laps[5] = {0, 0, 0, 0, 0};
 static long last_laps_delta[5] = {0, 0, 0, 0, 0};
 static int last_laps_number[5] = {0, 0, 0, 0, 0};
+
+void stopwatch_disable_sensor_check() {
+  sensor_check_enabled = false;
+}
 
 void stopwatch_start() {
   // stopwatch_reset();
@@ -69,7 +74,7 @@ void stopwatch_reset() {
 }
 
 void stopwatch_check() {
-  if (!digitalRead(SENSOR_PIN)) {
+  if (!digitalRead(SENSOR_PIN) && sensor_check_enabled) {
     stopwatch_lap();
   }
   if (millis() - last_timer_update_ms >= 10) {

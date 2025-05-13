@@ -5,6 +5,7 @@
 #include "web.h"
 #include <Arduino.h>
 
+void stopwatch_disable_sensor_check();
 void stopwatch_check();
 void stopwatch_start();
 void stopwatch_stop();
