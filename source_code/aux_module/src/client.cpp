@@ -9,6 +9,16 @@ const char *password = ENV_WIFI_PASS;
 void data_sent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print("\r\nLast Readings Send Status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+  if (status != ESP_NOW_SEND_SUCCESS) {
+    switch (config_get_wall()) {
+      case WALL_START:
+        client_start();
+        break;
+      case WALL_FINISH:
+        client_finish();
+        break;
+    }
+  }
 }
 
 void client_setup() {
@@ -55,7 +65,10 @@ String client_get_mac() {
 void client_start() {
   uint8_t data = 27;
   Serial.println("Sending Start Signal");
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
+  while (esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data)) != ESP_OK) {
+    Serial.println("Failed to send Start Signal");
+    delay(1);
+  }
 }
 
 void client_finish() {
