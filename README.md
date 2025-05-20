@@ -1,6 +1,6 @@
 # IRTimer: Maze & Line StopWatch
 ![IRTimer](./images/ir_timer_main.jpg "IRTimer - Maze & Line StopWatch")
-Cronómetro para MicroMouse y LineFollower con conectividad WiFi para visualización de interfaz gráfica web, permitiendo una simple integración con OBS y softwares similares. Además, tambien posee integración con nuestro sistema de inicio de robots IRStart, desde el cual se podrá detener y reiniciar el cronómetro a distancia.
+Cronómetro para MicroMouse y LineFollower con conectividad WiFi para visualización de interfaz gráfica web, permitiendo una simple integración con OBS y softwares similares. Además, tambien posee integración con nuestro sistema de inicio de robots [IRStart](https://github.com/OPRobots/IRStart), desde el cual se podrá detener y reiniciar el cronómetro a distancia.
 
 ## Módulo Principal y cronómetro de LineFollower
 ![IRTimer](./images/ir_timer_line.jpg "IRTimer - LineFollower")
